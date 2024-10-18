@@ -1,37 +1,41 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 /**
  * @typedef {import('vitepress').DefaultTheme.NavItem} NavItem
  * @typedef {import('vitepress').DefaultTheme.SidebarItem} SidebarItem
  * @typedef {import('vitepress').DefaultTheme.SidebarMulti} SidebarMulti
  */
 
-const log = (function () {
-  const filepath = path.join(
-    path.dirname(fileURLToPath(import.meta.url)),
-    'auto-nav.log',
-  );
-  fs.writeFile(filepath, new Date().toString() + '\n');
-  /** @param {string[]} e */
-  return function (...e) {
-    fs.appendFile(filepath, e.join(' ') + '\n');
-  };
-})();
-const IReg = { nav: /^-/, order: /^(\d+)_/ };
-/**@param {string} dirname */
-function dir_type(dirname) {
-  return IReg.nav.test(dirname) ? 'nav' : 'side';
-}
-/**@param {string} itemname */
-function side_item_order(itemname) {
-  const matches = itemname.match(IReg.order);
-  return matches ? +matches[1] : -1;
-}
-/**@param {string} itemname */
-function pure_name(itemname) {
-  return itemname.replace(IReg.nav, '').replace(IReg.order, '');
-}
+const log = Object.assign((...e) => log.data.info.push(e), {
+  data: {
+    created: new Date().toString(),
+    info: [],
+  },
+  async save() {
+    fs.writeFile(
+      path.join(path.dirname(fileURLToPath(import.meta.url)), 'auto-nav.json'),
+      JSON.stringify(log.data, null, 2),
+    );
+  },
+});
+const t = {
+  /**@readonly */
+  IReg: { nav: /^-/, order: /^(\d+)\./ },
+  /**@param {string} dirname */
+  dir_type(dirname) {
+    return t.IReg.nav.test(dirname) ? 'nav' : 'side';
+  },
+  /**@param {string} itemname */
+  item_order(itemname) {
+    const matches = itemname.match(t.IReg.order);
+    return matches ? +matches[1] : Infinity;
+  },
+  /**@param {string} itemname */
+  format(itemname) {
+    return itemname.replace(t.IReg.nav, '').replace(t.IReg.order, '');
+  },
+};
 
 /**@param {string} src @param {Set<string>} ignoreItems */
 async function generate(src, ignoreItems = new Set(['assets', 'pic'])) {
@@ -43,17 +47,19 @@ async function generate(src, ignoreItems = new Set(['assets', 'pic'])) {
       if (ignoreItems.has(item)) continue;
       const itempath = path.join(dirpath, item);
       const stat = await fs.stat(itempath);
-      stat.isDirectory() ? dirs.push(itempath) : files.push(itempath);
+      stat.isDirectory()
+        ? dirs.push(itempath)
+        : itempath.endsWith('.md') && files.push(itempath);
     }
     return { files, dirs };
   }
   /**@param {string} dirpath @returns {Promise<SidebarItem>} */
-  async function dir_to_side(dirpath) {
+  async function to_side(dirpath) {
     const { files, dirs } = await to_file_items(dirpath);
     const dirname = path.basename(dirpath);
-    if (dir_type(dirname) !== 'side') {
+    if (t.dir_type(dirname) !== 'side') {
       log("it's not side-dir", dirpath);
-      return { text: pure_name(dirname), link: '/404' };
+      return { text: t.format(dirname), link: '/not-side-dir' };
     }
     const file_sides = files
       .map((filepath) => {
@@ -63,53 +69,56 @@ async function generate(src, ignoreItems = new Set(['assets', 'pic'])) {
         const { name } = path.parse(filepath);
         return name === 'index'
           ? log('side-dir should not have index file', dirpath)
-          : { text: name, link: `${routepath}/${name}` };
+          : {
+              text: t.format(name),
+              link: `${routepath}/${name}`,
+              order: t.item_order(name ?? ''),
+            };
       })
       .filter((e) => !!e);
-    const dir_sides = await Promise.all(dirs.map(dir_to_side));
+    const dir_sides = await Promise.all(dirs.map(to_side));
     return {
-      text: pure_name(dirname),
-      items: dir_sides
-        .concat(file_sides)
-        .map((e) => Object.assign(e, { order: side_item_order(e.text ?? '') }))
-        .sort((a, b) => a.order - b.order),
+      text: t.format(dirname),
+      items: dir_sides.concat(file_sides).sort((a, b) => a.order - b.order),
     };
   }
   /**@param {string} dirpath @returns {Promise<NavItem>} */
-  async function dir_to_nav(dirpath) {
+  async function to_nav(dirpath) {
     const { files, dirs } = await to_file_items(dirpath);
     const dirname = path.basename(dirpath);
-    if (dir_type(dirname) === 'nav') {
+    if (t.dir_type(dirname) === 'nav') {
       files.length && log('nav-dir should not have files', dirpath);
-      //@ts-ignore
       return dirs.length
         ? {
-            text: pure_name(dirname),
-            items: await Promise.all(dirs.map(dir_to_nav)),
+            text: t.format(dirname),
+            items: await Promise.all(dirs.map(to_nav)),
           }
-        : { text: pure_name(dirname), link: '/404' };
+        : { text: t.format(dirname), link: '/no-dirs' };
     }
-    const routepath = `/${path.relative(src, dirpath).replaceAll('\\', '/')}`;
-    const sides = /**@type {SidebarItem[]} */ (
-      (await dir_to_side(dirpath)).items
-    );
-    sidebar[`${routepath}/`] = sides;
-    return sides.length
-      ? { text: dirname, link: `${routepath}/${path.parse(files[0]).name}` }
-      : { text: dirname, link: '/404' };
+    const side = await to_side(dirpath);
+    sidebar[`/${path.relative(src, dirpath).replaceAll('\\', '/')}/`] =
+      side.items ?? [];
+    return (function side_to_nav(item) {
+      return item.link
+        ? { text: dirname, link: item.link }
+        : item.items.length
+          ? side_to_nav(item.items[0])
+          : { text: dirname, link: '/no-items' };
+    })(side);
   }
   const { files, dirs } = await to_file_items(src);
   /**@type {SidebarMulti} */
   const sidebar = {};
   /**@type {NavItem[]} */
-  const nav = await Promise.all(dirs.map(dir_to_nav));
+  const nav = await Promise.all(dirs.map(to_nav));
   const data = { nav, sidebar };
-  log(JSON.stringify(data, null, 2));
+  Object.assign(log.data, data);
+  await log.save();
   return data;
 }
 export function AutoNav() {
   const name = '';
-  const match_str = name.match(IReg.nav)?.[0];
+  const match_str = name.match(t.IReg.nav)?.[0];
   return /**@satisfies {import('vite').Plugin} */ ({
     name: 'auto-nav',
     async config(cfg) {
@@ -122,3 +131,4 @@ export function AutoNav() {
     },
   });
 }
+generate('docs');
