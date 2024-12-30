@@ -6,8 +6,9 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "outDir": "dist"
   },
   "include": ["docs/**/*", ".vitepress/**/*", "plugins"]

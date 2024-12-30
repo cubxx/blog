@@ -16,16 +16,13 @@ export default withMermaid(
     },
     themeConfig: {
       // https://vitepress.dev/reference/default-theme-config
-      search: {
-        provider: 'local',
-      },
+      search: { provider: 'local' },
       socialLinks: [{ icon: 'github', link: 'https://github.com/cubxx' }],
-      outline: { level: [2, 3], label: '页面导航' },
+      outline: { level: [2, 3] },
       editLink: {
-        text: '在 GitHub 上编辑此页面',
         pattern: 'https://github.com/cubxx/blog/edit/main/docs/:path',
       },
-      lastUpdated: { text: '最后更新于' },
+      lastUpdated: {},
     },
     vite: { plugins: [AutoNav()] },
     mermaid: {},
