@@ -1,13 +1,27 @@
+<script setup>
+defineProps({
+  text: String
+})
+</script>
 <template>
-  <span><slot></slot></span>
+  <span :class="$style.hide">
+    <slot>{{ text }}</slot>
+  </span>
 </template>
-<style scoped>
-span {
+<style module>
+.hide {
+  cursor: pointer;
   color: black;
-  background-color: black;
+  background: black;
 }
-span:hover {
+
+.hide:active {
+  cursor: none;
   color: inherit;
-  background-color: inherit;
+  background: inherit;
+}
+
+.hide::selection {
+  content: '';
 }
 </style>
