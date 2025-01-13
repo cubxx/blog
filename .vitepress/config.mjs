@@ -5,7 +5,7 @@ import { AutoNav } from '../plugins/auto-nav';
 // https://vitepress.dev/reference/site-config
 export default withMermaid(
   defineConfig({
-    title: "Cubx's blog",
+    title: 'blog',
     description: '',
     base: '/blog/',
     srcDir: 'docs',

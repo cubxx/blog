@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: Recommend
-      link: https:/bluebones.fun
+      link: https://bluebones-team.github.io
       target: _blank
     - theme: alt
       text: Random
@@ -18,9 +18,8 @@ features:
   - title: Programing
     icon: 💻
     details: |
-      Front-end development <br>
-      Automated workflow <br>
-      Adaptive testing <br>
+      Full-stack development <br>
+      Machine learning <br>
   - title: Psychology
     icon: 🤔
     details: |
@@ -30,5 +29,5 @@ features:
     icon: 🎨
     details: |
       Motion Graphics <br>
-      AE <br>
+      Otomad <br>
 ---
