@@ -1,0 +1,156 @@
+{
+  "created": "Thu Feb 13 2025 17:52:47 GMT+0800 (GMT+08:00)",
+  "info": [],
+  "nav": [
+    {
+      "text": "Programing",
+      "items": [
+        {
+          "text": "Browser",
+          "link": "/-Programing/Browser/事件循环"
+        },
+        {
+          "text": "for-beginner",
+          "link": "/-Programing/for-beginner/1.前言"
+        },
+        {
+          "text": "Language",
+          "link": "/-Programing/Language/JavaScript/1.基础知识"
+        }
+      ]
+    }
+  ],
+  "sidebar": {
+    "/-Programing/Browser/": [
+      {
+        "text": "事件循环",
+        "link": "/-Programing/Browser/事件循环",
+        "order": null
+      },
+      {
+        "text": "数据存储",
+        "link": "/-Programing/Browser/数据存储",
+        "order": null
+      },
+      {
+        "text": "渲染原理",
+        "link": "/-Programing/Browser/渲染原理",
+        "order": null
+      },
+      {
+        "text": "缓存机制",
+        "link": "/-Programing/Browser/缓存机制",
+        "order": null
+      },
+      {
+        "text": "网络安全",
+        "link": "/-Programing/Browser/网络安全",
+        "order": null
+      },
+      {
+        "text": "网络通信",
+        "link": "/-Programing/Browser/网络通信",
+        "order": null
+      },
+      {
+        "text": "跨域",
+        "link": "/-Programing/Browser/跨域",
+        "order": null
+      }
+    ],
+    "/-Programing/for-beginner/": [
+      {
+        "text": "前言",
+        "link": "/-Programing/for-beginner/1.前言",
+        "order": 1
+      },
+      {
+        "text": "必要知识",
+        "link": "/-Programing/for-beginner/2.必要知识",
+        "order": 2
+      },
+      {
+        "text": "工具",
+        "link": "/-Programing/for-beginner/3.工具",
+        "order": 3
+      },
+      {
+        "text": "代码写法",
+        "link": "/-Programing/for-beginner/4.代码写法",
+        "order": 4
+      },
+      {
+        "text": "web开发",
+        "link": "/-Programing/for-beginner/web开发",
+        "order": null
+      },
+      {
+        "text": "实战",
+        "link": "/-Programing/for-beginner/实战",
+        "order": null
+      }
+    ],
+    "/-Programing/Language/": [
+      {
+        "text": "JavaScript",
+        "items": [
+          {
+            "text": "基础知识",
+            "link": "/-Programing/Language/JavaScript/1.基础知识",
+            "order": 1
+          },
+          {
+            "text": "手写原生",
+            "link": "/-Programing/Language/JavaScript/手写原生",
+            "order": null
+          },
+          {
+            "text": "算法",
+            "link": "/-Programing/Language/JavaScript/算法",
+            "order": null
+          }
+        ]
+      },
+      {
+        "text": "TypeScript",
+        "items": [
+          {
+            "text": "基础知识",
+            "link": "/-Programing/Language/TypeScript/1.基础知识",
+            "order": 1
+          },
+          {
+            "text": "类型安全",
+            "link": "/-Programing/Language/TypeScript/类型安全",
+            "order": null
+          },
+          {
+            "text": "类型编程",
+            "link": "/-Programing/Language/TypeScript/类型编程",
+            "order": null
+          }
+        ]
+      },
+      {
+        "text": "Bash",
+        "link": "/-Programing/Language/Bash",
+        "order": null
+      },
+      {
+        "text": "Matlab",
+        "link": "/-Programing/Language/Matlab",
+        "order": null
+      },
+      {
+        "text": "PowerShell",
+        "link": "/-Programing/Language/PowerShell",
+        "order": null
+      },
+      {
+        "text": "Python",
+        "link": "/-Programing/Language/Python",
+        "order": null
+      }
+    ]
+  }
+}
