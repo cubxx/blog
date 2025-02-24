@@ -24,7 +24,10 @@ export default withMermaid(
       },
       lastUpdated: {},
     },
-    vite: { plugins: [AutoNav()] },
+    vite: {
+      plugins: [AutoNav()],
+      resolve: { alias: { '~': '../../..' } },
+    },
     mermaid: {},
   }),
 );

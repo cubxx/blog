@@ -7,17 +7,18 @@ import { fileURLToPath } from 'url';
  * @typedef {import('vitepress').DefaultTheme.SidebarMulti} SidebarMulti
  */
 
-const log = (function () {
-  const filepath = path.join(
-    path.dirname(fileURLToPath(import.meta.url)),
-    'auto-nav.log',
-  );
-  fs.writeFile(filepath, new Date().toString() + '\n');
-  /** @param {string[]} e */
-  return function (...e) {
-    fs.appendFile(filepath, e.join(' ') + '\n');
-  };
-})();
+const log = Object.assign((...e) => log.data.info.push(e), {
+  data: {
+    created: new Date().toString(),
+    info: [],
+  },
+  async save() {
+    fs.writeFile(
+      path.join(path.dirname(fileURLToPath(import.meta.url)), 'auto-nav.json'),
+      JSON.stringify(log.data, null, 2),
+    );
+  },
+});
 const t = {
   /**@readonly */
   IReg: { nav: /^-/, order: /^(\d+)\./ },
@@ -111,7 +112,8 @@ async function generate(src, ignoreItems = new Set(['assets', 'pic'])) {
   /**@type {NavItem[]} */
   const nav = await Promise.all(dirs.map(to_nav));
   const data = { nav, sidebar };
-  log(JSON.stringify(data, null, 2));
+  Object.assign(log.data, data);
+  await log.save();
   return data;
 }
 export function AutoNav() {
