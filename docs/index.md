@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: Recommend
-      link: https://bluebones-team.github.io
+      link: https://bluebonesx.github.io
       target: _blank
     - theme: alt
       text: Random

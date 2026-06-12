@@ -1,9 +1,8 @@
-import { defineConfig } from 'vitepress';
-import 'vitepress-plugin-mermaid';
+import { withMermaid } from 'vitepress-plugin-mermaid';
 import { AutoNav } from '../plugins/auto-nav';
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default withMermaid({
   title: 'blog',
   description: '',
   base: '/blog/',
@@ -13,7 +12,12 @@ export default defineConfig({
     image: {
       lazyLoading: true,
     },
-    math: true,
+    async config(md) {
+      md.use(await import('@vscode/markdown-it-katex').then((m) => m.default), {
+        output: 'html',
+        throwOnError: true,
+      });
+    },
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
