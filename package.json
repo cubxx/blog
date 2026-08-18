@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev",
-    "build": "vitepress build",
-    "preview": "vitepress preview"
+    "dev": "bun --bun vitepress dev",
+    "build": "bun --bun vitepress build",
+    "preview": "bun --bun vitepress preview"
   },
   "dependencies": {
     "@vscode/markdown-it-katex": "^1.1.2",
